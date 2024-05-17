@@ -7,9 +7,10 @@ import Point from "../models/Point"
 interface SnowflakeTemplateProps {
   points: Point[]
   setPoints: (points: Point[]) => void
+  submitted: boolean
 }
 
-const SnowflakeTemplate = ({ points, setPoints }: SnowflakeTemplateProps) => {
+const SnowflakeTemplate = ({ points, setPoints, submitted }: SnowflakeTemplateProps) => {
   const shape = useRef<SVGSVGElement>(null)
 
   const [edges, setEdges] = useState<Edge[]>(snowflakeTemplateTriangleEdges)
@@ -40,9 +41,9 @@ const SnowflakeTemplate = ({ points, setPoints }: SnowflakeTemplateProps) => {
       <use
         xlinkHref="#shape"
         fill="white"
-        className={currentCutPointSequence.length === 0 ? "" : "hover:cursor-snowflake-interior"}
+        className={submitted || currentCutPointSequence.length === 0 ? "" : "hover:cursor-snowflake-interior"}
         onClick={
-          currentCutPointSequence.length === 0
+          submitted || currentCutPointSequence.length === 0
             ? undefined
             : (event) => {
                 setCurrentCutPointSequence([...currentCutPointSequence, getPointFromEvent(event)])
@@ -59,30 +60,34 @@ const SnowflakeTemplate = ({ points, setPoints }: SnowflakeTemplateProps) => {
           stroke="transparent"
           strokeWidth={4}
           clipPath="url(#clip)"
-          className={`hover:cursor-snowflake-edge`}
-          onClick={(event) => {
-            if (currentCutPointSequence.length === 0) {
-              setFirstPointEdgeIndex(edgeIndex)
-              setCurrentCutPointSequence([...currentCutPointSequence, getPointFromEvent(event)])
-            } else {
-              const firstNewPoint = currentCutPointSequence[0]
-              const lastNewPoint = getPointFromEvent(event)
-              const snowflakeData = getSnowflakeDataAtEndOfCut(
-                points,
-                currentCutPointSequence,
-                firstNewPoint,
-                lastNewPoint,
-                edges,
-                firstPointEdgeIndex!,
-                edgeIndex,
-              )
-              console.log(snowflakeData)
-              setEdges(snowflakeData.edges)
-              setPoints(snowflakeData.points)
-              setCurrentCutPointSequence([])
-              setFirstPointEdgeIndex(undefined)
-            }
-          }}
+          className={submitted ? "" : "hover:cursor-snowflake-edge"}
+          onClick={
+            submitted
+              ? undefined
+              : (event) => {
+                  if (currentCutPointSequence.length === 0) {
+                    setFirstPointEdgeIndex(edgeIndex)
+                    setCurrentCutPointSequence([...currentCutPointSequence, getPointFromEvent(event)])
+                  } else {
+                    const firstNewPoint = currentCutPointSequence[0]
+                    const lastNewPoint = getPointFromEvent(event)
+                    const snowflakeData = getSnowflakeDataAtEndOfCut(
+                      points,
+                      currentCutPointSequence,
+                      firstNewPoint,
+                      lastNewPoint,
+                      edges,
+                      firstPointEdgeIndex!,
+                      edgeIndex,
+                    )
+                    console.log(snowflakeData)
+                    setEdges(snowflakeData.edges)
+                    setPoints(snowflakeData.points)
+                    setCurrentCutPointSequence([])
+                    setFirstPointEdgeIndex(undefined)
+                  }
+                }
+          }
         />
       ))}
     </svg>

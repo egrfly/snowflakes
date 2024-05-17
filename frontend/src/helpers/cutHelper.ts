@@ -1,6 +1,6 @@
 import Edge from "../models/Edge"
 import Point from "../models/Point"
-import SnowflakeData from "../models/SnowflakeData"
+import SnowflakeTemplateData from "../models/SnowflakeTemplateData"
 import { computeDistance } from "./distanceHelper"
 
 const cutStartsAndEndsOnSameEdge = (firstPointEdgeIndex: number, lastPointEdgeIndex: number) =>
@@ -96,7 +96,7 @@ const getSnowflakeDataForCutThatStartsAndEndsOnDifferentEdges = (
   edges: Edge[],
   firstPointEdgeIndex: number,
   lastPointEdgeIndex: number,
-): SnowflakeData => {
+): SnowflakeTemplateData => {
   const newEdges: Edge[] = getNewEdges(
     edges[firstPointEdgeIndex],
     edges[lastPointEdgeIndex],
@@ -131,7 +131,10 @@ const getSnowflakeDataForCutThatStartsAndEndsOnDifferentEdges = (
 const snowflakeWouldDisintegrate = (edges: Edge[]) =>
   !(edges.some((edge) => edge.isLeftFoldEdge) && edges.some((edge) => edge.isRightFoldEdge))
 
-const getOuterSnowflake = (option1SnowflakeData: SnowflakeData, option2SnowflakeData: SnowflakeData) => {
+const getOuterSnowflake = (
+  option1SnowflakeData: SnowflakeTemplateData,
+  option2SnowflakeData: SnowflakeTemplateData,
+) => {
   const option1LeastYOffset = Math.min(...option1SnowflakeData.points.map((point) => point.y))
   const option2LeastYOffset = Math.min(...option2SnowflakeData.points.map((point) => point.y))
   if (option1LeastYOffset < option2LeastYOffset) {
@@ -149,7 +152,7 @@ export const getSnowflakeDataAtEndOfCut = (
   edges: Edge[],
   firstPointEdgeIndex: number,
   edgeIndex: number,
-): SnowflakeData => {
+): SnowflakeTemplateData => {
   const lastPointEdgeIndex = edgeIndex
   if (cutStartsAndEndsOnSameEdge(firstPointEdgeIndex, lastPointEdgeIndex)) {
     return getSnowflakeDataForCutThatStartsAndEndsOnSameEdge(

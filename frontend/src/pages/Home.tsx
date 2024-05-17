@@ -1,13 +1,8 @@
-import { ReactNode } from "react"
-import { Link } from "react-router-dom"
 import { SparklesIcon } from "@heroicons/react/24/solid"
 import Snowflake from "../components/Snowflake"
 import { homepageSnowflakes } from "../data/sampleData"
 import SplitScreen from "../layouts/SplitScreen"
-
-interface ButtonProps {
-  children: ReactNode
-}
+import LinkButton from "../components/LinkButton"
 
 const SourceCodeLink = () => {
   return (
@@ -18,25 +13,6 @@ const SourceCodeLink = () => {
         View code <span aria-hidden="true">&rarr;</span>
       </a>
     </div>
-  )
-}
-
-const SlateButton = ({ children }: ButtonProps) => {
-  return (
-    <Link
-      to="/workbench"
-      className="rounded-md bg-slate-700 px-3.5 py-2.5 text-sm font-semibold shadow-sm hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700 transition-colors"
-    >
-      {children}
-    </Link>
-  )
-}
-
-const TransparentButton = ({ children }: ButtonProps) => {
-  return (
-    <Link to="/gallery" className="text-sm font-semibold hover:text-white transition-colors">
-      {children}
-    </Link>
   )
 }
 
@@ -55,10 +31,12 @@ const Home = () => {
             devise your best snowflake design.
           </p>
           <div className="mt-10 flex justify-center lg:justify-start items-center gap-x-6">
-            <SlateButton>Get started</SlateButton>
-            <TransparentButton>
+            <LinkButton variant="slate" to="/workbench">
+              Get started
+            </LinkButton>
+            <LinkButton variant="transparent" to="/gallery">
               Get inspiration <span aria-hidden="true">→</span>
-            </TransparentButton>
+            </LinkButton>
           </div>
         </>
       }

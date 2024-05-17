@@ -1,9 +1,6 @@
-import Edge from "./Edge"
-import Point from "./Point"
-
 interface SnowflakeData {
-  points: Point[]
-  edges: Edge[]
+  id: number
+  points: string
 }
 
 export default SnowflakeData
